@@ -1,0 +1,32 @@
+[workspace]
+members = [".", "xtask"]
+
+[package]
+name = "javascript-globals"
+version = "0.0.1"
+authors = ["Boshen <boshenc@gmail.com>"]
+categories = []
+edition = "2021"
+include = ["/src"]
+keywords = ["javascript", "globals"]
+license = "MIT"
+publish = true
+readme = "README.md"
+repository = "https://github.com/oxc-project/javascript-globals"
+rust-version = "1.76"
+description = "Global identifiers from different JavaScript environments"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+# restriction
+dbg_macro = "warn"
+todo = "warn"
+unimplemented = "warn"
+print_stdout = "warn" # Must be opt-in
+print_stderr = "warn" # Must be opt-in
+
+[lints]
+workspace = true
+
+[dependencies]
+phf = { version = "0.11.3", features = ["macros"] }
