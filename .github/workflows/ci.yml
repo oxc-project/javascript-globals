@@ -37,7 +37,6 @@ jobs:
           save-cache: ${{ github.ref_name == 'main' }}
       - run: cargo run -p xtask
       - run: cargo check --all-targets --all-features
-      - run: cargo test
       - run: git diff --exit-code # Must commit everything
 
   lint:

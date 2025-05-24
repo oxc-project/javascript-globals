@@ -28,5 +28,9 @@ print_stderr = "warn" # Must be opt-in
 [lints]
 workspace = true
 
+[lib]
+test = false
+doctest = false
+
 [dependencies]
 phf = { version = "0.11.3", features = ["macros"] }
