@@ -66,7 +66,10 @@ lazy_static! {
         ]);
     };
     static ref NEW_GLOBALS_2025: FxHashMap<String, bool> = {
-        return FxHashMap::from_iter([(String::from("Iterator"), false)]);
+        return FxHashMap::from_iter([
+            (String::from("Float16Array"), false),
+            (String::from("Iterator"), false),
+        ]);
     };
 }
 
