@@ -129,6 +129,7 @@ fn main() {
         ("es2023", &new_globals_2015_2017_2020_2021),
         ("es2024", &new_globals_2015_2017_2020_2021),
         ("es2025", &new_globals_2015_2017_2020_2021_2025),
+        ("es2026", &new_globals_2015_2017_2020_2021_2025),
         // Platforms
         ("browser", &globals["browser"]),
         ("node", &globals["node"]),
