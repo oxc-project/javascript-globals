@@ -370,6 +370,7 @@ pub static GLOBALS: Map<&'static str, Map<&'static str, bool>> = phf_map! {
         "BigUint64Array" => false,
         "DataView" => false,
         "FinalizationRegistry" => false,
+        "Float16Array" => false,
         "Float32Array" => false,
         "Float64Array" => false,
         "Int16Array" => false,
