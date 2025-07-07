@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.2.0...javascript-globals-v1.3.0) - 2025-07-07
+
+### Added
+
+- add `es2026` ([#36](https://github.com/oxc-project/javascript-globals/pull/36))
+
+### Other
+
+- *(deps)* lock file maintenance ([#35](https://github.com/oxc-project/javascript-globals/pull/35))
+- update globals ([#37](https://github.com/oxc-project/javascript-globals/pull/37))
+- *(deps)* lock file maintenance rust crates ([#31](https://github.com/oxc-project/javascript-globals/pull/31))
+
 ## [1.2.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.1.1...javascript-globals-v1.2.0) - 2025-06-09
 
 ### Added
