@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.2](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.1...javascript-globals-v1.3.2) - 2025-07-27
+
+### Other
+
+- use `phf_codegen` instead of using macros
+
 ## [1.3.1](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.0...javascript-globals-v1.3.1) - 2025-07-07
 
 ### Fixed
