@@ -1,31 +1,20 @@
-#![expect(clippy::print_stdout, clippy::print_stderr)]
+use std::fs::{self};
+
 use lazy_static::lazy_static;
 use rustc_hash::FxHashMap;
 use serde::Serialize;
 use ureq::Agent;
-mod template;
 
 #[derive(Serialize, Debug)]
-pub struct EnvVar<'a> {
-    pub name: &'a str,
-    pub writeable: bool,
+struct EnvVar<'a> {
+    name: &'a str,
+    writeable: bool,
 }
 
 #[derive(Serialize, Debug)]
-pub struct Env<'a> {
-    pub name: &'a str,
-    pub vars: Vec<EnvVar<'a>>,
-}
-
-#[derive(Serialize)]
-pub struct Context<'a> {
-    envs: Vec<Env<'a>>,
-}
-
-impl<'a> Context<'a> {
-    fn new(envs: Vec<Env<'a>>) -> Self {
-        Self { envs }
-    }
+struct Env<'a> {
+    name: &'a str,
+    vars: Vec<EnvVar<'a>>,
 }
 
 fn get_diff(
@@ -164,26 +153,36 @@ fn main() {
     .iter()
     .map(|(name, vars)| Env {
         name,
-        vars: to_env_vars(vars),
+        vars: vars
+            .iter()
+            .map(|(key, value)| EnvVar {
+                name: key,
+                writeable: *value,
+            })
+            .collect::<Vec<_>>(),
     })
     .collect();
 
-    let context = Context::new(envs_preset);
-    let template = template::Template::with_context(&context);
-    if let Err(err) = template.render() {
-        eprintln!("failed to render environments template: {err}");
-    }
-}
-
-fn to_env_vars(env_var_map: &FxHashMap<String, bool>) -> Vec<EnvVar> {
-    let mut result: Vec<EnvVar> = vec![];
-    for (key, value) in env_var_map {
-        result.push(EnvVar {
-            name: key,
-            writeable: *value,
-        });
+    let mut map = phf_codegen::Map::new();
+    for env in envs_preset {
+        let mut inner_map = phf_codegen::Map::new();
+        for inner_env in env.vars {
+            inner_map.entry(inner_env.name, inner_env.writeable.to_string());
+        }
+        map.entry(env.name, inner_map.build().to_string());
     }
 
-    result.sort_by(|a, b| a.name.cmp(b.name));
-    result
+    let header = "
+//! # JavaScript Globals
+//!
+//! Global identifiers from different JavaScript environments
+//!
+//! Rust fork of <https://www.npmjs.com/package/globals>";
+
+    let out = format!(
+        "{header}\n\n#[rustfmt::skip]\npub static GLOBALS: phf::Map<&'static str, phf::Map<&'static str, bool>> = {};",
+        map.build()
+    );
+
+    fs::write("src/lib.rs", out).unwrap()
 }

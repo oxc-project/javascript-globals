@@ -33,4 +33,4 @@ test = false
 doctest = false
 
 [dependencies]
-phf = { version = "0.12.0", features = ["macros"] }
+phf = "0.12.0"
