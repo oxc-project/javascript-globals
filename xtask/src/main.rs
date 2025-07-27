@@ -180,7 +180,7 @@ fn main() {
 //! Rust fork of <https://www.npmjs.com/package/globals>";
 
     let out = format!(
-        "{header}\n\n#[rustfmt::skip]\npub static GLOBALS: phf::Map<&'static str, phf::Map<&'static str, bool>> = {};",
+        "{header}\n\n#[rustfmt::skip]\npub static GLOBALS: phf::Map<&'static str, phf::Map<&'static str, bool>> = {};\n",
         map.build()
     );
 
