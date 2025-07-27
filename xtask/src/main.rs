@@ -172,8 +172,7 @@ fn main() {
         map.entry(env.name, inner_map.build().to_string());
     }
 
-    let header = "
-//! # JavaScript Globals
+    let header = "//! # JavaScript Globals
 //!
 //! Global identifiers from different JavaScript environments
 //!
