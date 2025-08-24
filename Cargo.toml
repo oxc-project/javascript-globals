@@ -33,4 +33,4 @@ test = false
 doctest = false
 
 [dependencies]
-phf = "0.12.0"
+phf = "0.13.0"

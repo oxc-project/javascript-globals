@@ -9,7 +9,7 @@ workspace = true
 
 [dependencies]
 lazy_static = "1.5.0"
-phf_codegen = "0.12.1"
+phf_codegen = "0.13.0"
 rustc-hash = "2"
 serde = { version = "1", features = ["derive"] }
 ureq = { version = "3.0.5", default-features = false, features = ["json", "rustls"] }
