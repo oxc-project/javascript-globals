@@ -1,31 +1,22 @@
----
 name: Auto Update
 
-permissions:
-  contents: write
+permissions: {}
 
 on:
   schedule:
-    - cron: '0 2 * * *'  # Run daily at 2 AM UTC
-  workflow_dispatch: true  # Allow manual triggers
-
-defaults:
-  run:
-    shell: bash
-
-env:
-  CARGO_INCREMENTAL: 0
+    - cron: "0 2 * * *" # Run daily at 2 AM UTC
+  workflow_dispatch:
 
 jobs:
-  auto-update:
-    name: Auto Update Globals
+  update:
+    name: Auto Update
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: taiki-e/checkout-action@b13d20b7cda4e2f325ef19895128f7ff735c0b3d  # v1.3.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: taiki-e/checkout-action@b13d20b7cda4e2f325ef19895128f7ff735c0b3d # v1.3.1
 
-      - uses: oxc-project/setup-rust@cd82e1efec7fef815e2c23d296756f31c7cdc03d  # v1.0.0
+      - uses: oxc-project/setup-rust@cd82e1efec7fef815e2c23d296756f31c7cdc03d # v1.0.0
 
       - name: Run xtask to update globals
         run: cargo run -p xtask
@@ -40,10 +31,10 @@ jobs:
           fi
 
       - name: Commit and push changes
-        if: steps.verify-changed-files.outputs.changed == 'true'
+        if: steps.verify-changed-files.outputs.changed == "true"
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions"
           git add .
           git commit -m "Auto update globals from upstream"
           git push
