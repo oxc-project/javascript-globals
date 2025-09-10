@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.3](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.2...javascript-globals-v1.3.3) - 2025-09-10
+
+### Other
+
+- Auto update globals from upstream ([#79](https://github.com/oxc-project/javascript-globals/pull/79))
+- Add auto-update CI workflow for JavaScript globals ([#75](https://github.com/oxc-project/javascript-globals/pull/75))
+- *(deps)* lock file maintenance rust crates ([#72](https://github.com/oxc-project/javascript-globals/pull/72))
+- *(deps)* lock file maintenance ([#68](https://github.com/oxc-project/javascript-globals/pull/68))
+- *(deps)* lock file maintenance rust crates ([#63](https://github.com/oxc-project/javascript-globals/pull/63))
+
 ## [1.3.2](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.1...javascript-globals-v1.3.2) - 2025-07-27
 
 ### Other
