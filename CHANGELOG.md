@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.4](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.3...javascript-globals-v1.3.4) - 2025-10-29
+
+### Other
+
+- Add Vue, Svelte, and Astro globals ([#106](https://github.com/oxc-project/javascript-globals/pull/106))
+
 ## [1.3.3](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.2...javascript-globals-v1.3.3) - 2025-09-10
 
 ### Other
