@@ -60,6 +60,34 @@ lazy_static! {
             (String::from("Iterator"), false),
         ]);
     };
+    // Framework-specific globals
+    static ref ASTRO_GLOBALS: FxHashMap<String, bool> = {
+        return FxHashMap::from_iter([
+            (String::from("Astro"), false),
+        ]);
+    };
+    static ref SVELTE_GLOBALS: FxHashMap<String, bool> = {
+        return FxHashMap::from_iter([
+            (String::from("$state"), false),
+            (String::from("$derived"), false),
+            (String::from("$effect"), false),
+            (String::from("$props"), false),
+            (String::from("$bindable"), false),
+            (String::from("$inspect"), false),
+            (String::from("$host"), false),
+        ]);
+    };
+    static ref VUE_GLOBALS: FxHashMap<String, bool> = {
+        return FxHashMap::from_iter([
+            (String::from("defineProps"), false),
+            (String::from("defineEmits"), false),
+            (String::from("defineExpose"), false),
+            (String::from("withDefaults"), false),
+            (String::from("defineOptions"), false),
+            (String::from("defineSlots"), false),
+            (String::from("defineModel"), false),
+        ]);
+    };
 }
 
 fn main() {
@@ -131,6 +159,7 @@ fn main() {
         // Frameworks
         ("amd", &globals["amd"]),
         ("applescript", &globals["applescript"]),
+        ("astro", &ASTRO_GLOBALS),
         ("atomtest", &globals["atomtest"]),
         ("commonjs", &globals["commonjs"]),
         ("embertest", &globals["embertest"]),
@@ -146,9 +175,11 @@ fn main() {
         ("prototypejs", &globals["prototypejs"]),
         ("phantomjs", &globals["phantomjs"]),
         ("shelljs", &globals["shelljs"]),
+        ("svelte", &SVELTE_GLOBALS),
         ("webextensions", &globals["webextensions"]),
         ("qunit", &globals["qunit"]),
         ("vitest", &globals["vitest"]),
+        ("vue", &VUE_GLOBALS),
     ]
     .iter()
     .map(|(name, vars)| Env {
