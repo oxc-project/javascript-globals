@@ -143,6 +143,7 @@ fn main() {
         ("es2025", &new_globals_2015_2017_2020_2021_2025),
         ("es2026", &new_globals_2015_2017_2020_2021_2025),
         // Platforms
+        ("audioworklet", &globals["audioWorklet"]),
         ("browser", &globals["browser"]),
         ("node", &globals["node"]),
         ("shared-node-browser", &globals["shared-node-browser"]),
