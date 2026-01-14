@@ -5,6 +5,8 @@ use rustc_hash::FxHashMap;
 use serde::Serialize;
 use ureq::Agent;
 
+const LOCAL_GLOBALS_PATH: &str = "xtask/globals.json";
+
 #[derive(Serialize, Debug)]
 struct EnvVar<'a> {
     name: &'a str,
@@ -98,8 +100,10 @@ fn main() {
     // let globals: FxHashMap<String, FxHashMap<String, bool>>;
     let globals: FxHashMap<String, FxHashMap<String, bool>> =
         // Try to read from local file first
-        if let Ok(file_content) = fs::read_to_string("xtask/globals.json") {
-            serde_json::from_str(&file_content).unwrap()
+        if let Ok(file_content) = fs::read_to_string(LOCAL_GLOBALS_PATH) {
+            serde_json::from_str(&file_content).unwrap_or_else(|e| {
+                panic!("Failed to parse local globals.json: {e}");
+            })
         } else {
             // Fall back to fetching from remote
             match Agent::new_with_defaults()
