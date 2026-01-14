@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.4...javascript-globals-v1.4.0) - 2026-01-14
+
+### Added
+
+- add `audioworklet` environment ([#145](https://github.com/oxc-project/javascript-globals/pull/145))
+
+### Other
+
+- *(xtask)* use globals from node_modules instead of HTTP ([#144](https://github.com/oxc-project/javascript-globals/pull/144))
+- Auto update globals from upstream ([#136](https://github.com/oxc-project/javascript-globals/pull/136))
+- Auto update globals from upstream ([#132](https://github.com/oxc-project/javascript-globals/pull/132))
+- *(deps)* lock file maintenance ([#117](https://github.com/oxc-project/javascript-globals/pull/117))
+- *(deps)* update rust crate ureq to v3.1.4 ([#115](https://github.com/oxc-project/javascript-globals/pull/115))
+- *(deps)* lock file maintenance ([#114](https://github.com/oxc-project/javascript-globals/pull/114))
+- Auto update globals from upstream ([#110](https://github.com/oxc-project/javascript-globals/pull/110))
+
 ## [1.3.4](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.3...javascript-globals-v1.3.4) - 2025-10-29
 
 ### Other
