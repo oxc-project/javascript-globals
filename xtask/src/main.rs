@@ -1,9 +1,8 @@
-use std::fs::{self};
+use std::fs;
 
 use lazy_static::lazy_static;
 use rustc_hash::FxHashMap;
 use serde::Serialize;
-use ureq::Agent;
 
 #[derive(Serialize, Debug)]
 struct EnvVar<'a> {
@@ -94,17 +93,10 @@ fn main() {
     // Each global is given a value of true or false.
     // A value of true indicates that the variable may be overwritten.
     // A value of false indicates that the variable should be considered read-only.
-    // open globals.json file relative to current file
-    // let globals: FxHashMap<String, FxHashMap<String, bool>>;
-    let globals: FxHashMap<String, FxHashMap<String, bool>> = match Agent::new_with_defaults()
-        .get("https://raw.githubusercontent.com/sindresorhus/globals/main/globals.json")
-        .call()
-    {
-        Ok(mut response) => response.body_mut().read_json().unwrap(),
-        Err(e) => {
-            panic!("Failed to fetch globals.json: {e}");
-        }
-    };
+    let globals_json = fs::read_to_string("node_modules/globals/globals.json")
+        .expect("Failed to read node_modules/globals/globals.json. Run `pnpm install` first.");
+    let globals: FxHashMap<String, FxHashMap<String, bool>> =
+        serde_json::from_str(&globals_json).expect("Failed to parse globals.json");
 
     // 19 variables such as Promise, Map, ...
     let new_globals_2015 = get_diff(&globals["es2015"], &globals["es5"]);
