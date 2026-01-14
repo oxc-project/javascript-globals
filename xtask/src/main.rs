@@ -96,15 +96,22 @@ fn main() {
     // A value of false indicates that the variable should be considered read-only.
     // open globals.json file relative to current file
     // let globals: FxHashMap<String, FxHashMap<String, bool>>;
-    let globals: FxHashMap<String, FxHashMap<String, bool>> = match Agent::new_with_defaults()
-        .get("https://raw.githubusercontent.com/sindresorhus/globals/main/globals.json")
-        .call()
-    {
-        Ok(mut response) => response.body_mut().read_json().unwrap(),
-        Err(e) => {
-            panic!("Failed to fetch globals.json: {e}");
-        }
-    };
+    let globals: FxHashMap<String, FxHashMap<String, bool>> =
+        // Try to read from local file first
+        if let Ok(file_content) = fs::read_to_string("xtask/globals.json") {
+            serde_json::from_str(&file_content).unwrap()
+        } else {
+            // Fall back to fetching from remote
+            match Agent::new_with_defaults()
+                .get("https://raw.githubusercontent.com/sindresorhus/globals/main/globals.json")
+                .call()
+            {
+                Ok(mut response) => response.body_mut().read_json().unwrap(),
+                Err(e) => {
+                    panic!("Failed to fetch globals.json: {e}");
+                }
+            }
+        };
 
     // 19 variables such as Promise, Map, ...
     let new_globals_2015 = get_diff(&globals["es2015"], &globals["es5"]);
@@ -152,6 +159,7 @@ fn main() {
         ("es2026", &new_globals_2015_2017_2020_2021_2025),
         // Platforms
         ("browser", &globals["browser"]),
+        ("audioWorklet", &globals["audioWorklet"]),
         ("node", &globals["node"]),
         ("shared-node-browser", &globals["shared-node-browser"]),
         ("worker", &globals["worker"]),
