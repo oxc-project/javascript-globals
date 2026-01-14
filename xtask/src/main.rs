@@ -101,16 +101,18 @@ fn main() {
     let globals: FxHashMap<String, FxHashMap<String, bool>> =
         // Try to read from local file first
         if let Ok(file_content) = fs::read_to_string(LOCAL_GLOBALS_PATH) {
-            serde_json::from_str(&file_content).unwrap_or_else(|e| {
-                panic!("Failed to parse local globals.json: {e}");
-            })
+            serde_json::from_str(&file_content)
+                .expect("Failed to parse local globals.json")
         } else {
             // Fall back to fetching from remote
             match Agent::new_with_defaults()
                 .get("https://raw.githubusercontent.com/sindresorhus/globals/main/globals.json")
                 .call()
             {
-                Ok(mut response) => response.body_mut().read_json().unwrap(),
+                Ok(mut response) => response
+                    .body_mut()
+                    .read_json()
+                    .expect("Failed to parse globals.json from remote"),
                 Err(e) => {
                     panic!("Failed to fetch globals.json: {e}");
                 }
