@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.4.0...javascript-globals-v1.4.1) - 2026-02-02
+
+### Fixed
+
+- *(ci)* update globals package before running xtask ([#158](https://github.com/oxc-project/javascript-globals/pull/158))
+
 ## [1.4.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.4...javascript-globals-v1.4.0) - 2026-01-14
 
 ### Added
