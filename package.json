@@ -1,6 +1,6 @@
 {
 	"devDependencies": {
-		"globals": "^17.0.0"
+		"globals": "^17.3.0"
 	},
 	"packageManager": "pnpm@10.28.1"
 }
