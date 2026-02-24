@@ -2,4 +2,4 @@
 
 > Global identifiers from different JavaScript environments
 
-Rust fork of https://www.npmjs.com/package/globals
+Rust fork of https://npmx.dev/package/globals
