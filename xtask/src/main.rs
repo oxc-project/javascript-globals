@@ -187,6 +187,8 @@ fn main() {
     })
     .collect();
 
+    let env_names: Vec<&str> = envs_preset.iter().map(|env| env.name).collect();
+
     let mut map = phf_codegen::Map::new();
     for env in envs_preset {
         let mut inner_map = phf_codegen::Map::new();
@@ -207,5 +209,31 @@ fn main() {
         map.build()
     );
 
-    fs::write("src/lib.rs", out).unwrap()
+    fs::write("src/lib.rs", out).unwrap();
+
+    update_readme(&env_names);
+}
+
+fn update_readme(env_names: &[&str]) {
+    let readme = fs::read_to_string("README.md").expect("Failed to read README.md");
+
+    let start_marker = "<!-- GENERATED-ENV-LIST:START - Do not remove or modify this section -->";
+    let end_marker = "<!-- GENERATED-ENV-LIST:END -->";
+
+    let start = readme
+        .find(start_marker)
+        .expect("Could not find start marker in README.md");
+    let end = readme
+        .find(end_marker)
+        .expect("Could not find end marker in README.md");
+
+    let env_list: String = env_names.iter().map(|name| format!("- `{name}`\n")).collect();
+
+    let new_readme = format!(
+        "{}{start_marker}\n{env_list}{end_marker}{}",
+        &readme[..start],
+        &readme[end + end_marker.len()..],
+    );
+
+    fs::write("README.md", new_readme).unwrap();
 }
