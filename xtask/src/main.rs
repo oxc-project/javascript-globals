@@ -227,7 +227,10 @@ fn update_readme(env_names: &[&str]) {
         .find(end_marker)
         .expect("Could not find end marker in README.md");
 
-    let env_list: String = env_names.iter().map(|name| format!("- `{name}`\n")).collect();
+    let env_list: String = env_names
+        .iter()
+        .map(|name| format!("- `{name}`\n"))
+        .collect();
 
     let new_readme = format!(
         "{}{start_marker}\n{env_list}{end_marker}{}",
