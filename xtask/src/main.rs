@@ -177,26 +177,21 @@ fn main() {
     .iter()
     .map(|(name, vars)| Env {
         name,
-        vars: vars
-            .iter()
-            .map(|(key, value)| EnvVar {
-                name: key,
-                writeable: *value,
-            })
-            .collect::<Vec<_>>(),
+        vars: {
+            let mut v: Vec<_> = vars
+                .iter()
+                .map(|(key, value)| EnvVar {
+                    name: key,
+                    writeable: *value,
+                })
+                .collect();
+            v.sort_by_key(|e| e.name);
+            v
+        },
     })
     .collect();
 
     let env_names: Vec<&str> = envs_preset.iter().map(|env| env.name).collect();
-
-    let mut map = phf_codegen::Map::new();
-    for env in envs_preset {
-        let mut inner_map = phf_codegen::Map::new();
-        for inner_env in env.vars {
-            inner_map.entry(inner_env.name, inner_env.writeable.to_string());
-        }
-        map.entry(env.name, inner_map.build().to_string());
-    }
 
     let header = "//! # JavaScript Globals
 //!
@@ -204,14 +199,78 @@ fn main() {
 //!
 //! Rust fork of <https://www.npmjs.com/package/globals>";
 
+    // Generate individual statics for each env
+    let mut individual_statics = String::new();
+    let mut outer_map = phf_codegen::Map::new();
+
+    for env in &envs_preset {
+        let static_name = to_static_name(env.name);
+        let mut inner_map = phf_codegen::Map::new();
+        for var in &env.vars {
+            inner_map.entry(var.name, var.writeable.to_string());
+        }
+        individual_statics.push_str(&format!(
+            "#[rustfmt::skip]\npub static {static_name}: phf::Map<&'static str, bool> = {};\n\n",
+            inner_map.build()
+        ));
+        outer_map.entry(env.name, format!("&{static_name}"));
+    }
+
     let out = format!(
-        "{header}\n\n#[rustfmt::skip]\npub static GLOBALS: phf::Map<&'static str, phf::Map<&'static str, bool>> = {};\n",
-        map.build()
+        r#"{header}
+
+use core::ops::Index;
+
+/// A map of environment names to their global variable maps.
+pub struct Globals(phf::Map<&'static str, &'static phf::Map<&'static str, bool>>);
+
+impl Globals {{
+    /// Returns an iterator over the entries of the globals map.
+    pub fn entries(
+        &self,
+    ) -> impl Iterator<Item = (&'static str, &'static phf::Map<&'static str, bool>)> + '_ {{
+        self.0.entries().map(|(&k, &v)| (k, v))
+    }}
+
+    /// Returns the globals map for the given environment name.
+    pub fn get(&self, key: &str) -> Option<&'static phf::Map<&'static str, bool>> {{
+        self.0.get(key).copied()
+    }}
+
+    /// Returns an iterator over the values of the globals map.
+    pub fn values(&self) -> impl Iterator<Item = &'static phf::Map<&'static str, bool>> + '_ {{
+        self.0.values().copied()
+    }}
+
+    /// Returns true if the globals map contains the given environment name.
+    pub fn contains_key(&self, key: &str) -> bool {{
+        self.0.contains_key(key)
+    }}
+}}
+
+impl Index<&str> for Globals {{
+    type Output = phf::Map<&'static str, bool>;
+
+    fn index(&self, key: &str) -> &Self::Output {{
+        self.0
+            .get(key)
+            .unwrap_or_else(|| panic!("unknown environment: {{key}}"))
+    }}
+}}
+
+{individual_statics}#[rustfmt::skip]
+pub static GLOBALS: Globals = Globals({globals});
+"#,
+        globals = outer_map.build()
     );
 
     fs::write("src/lib.rs", out).unwrap();
 
     update_readme(&env_names);
+}
+
+fn to_static_name(name: &str) -> String {
+    format!("GLOBALS_{}", name.to_uppercase().replace('-', "_"))
 }
 
 fn update_readme(env_names: &[&str]) {
