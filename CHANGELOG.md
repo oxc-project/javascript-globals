@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.4.1...javascript-globals-v1.5.0) - 2026-03-24
+
+### Added
+
+- export individual env statics ([#189](https://github.com/oxc-project/javascript-globals/pull/189))
+
+### Other
+
+- Auto-generate available env categories list in README via xtask ([#188](https://github.com/oxc-project/javascript-globals/pull/188))
+- Auto update globals from upstream ([#179](https://github.com/oxc-project/javascript-globals/pull/179))
+- map npm package links to npmx.dev ([#174](https://github.com/oxc-project/javascript-globals/pull/174))
+
 ## [1.4.1](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.4.0...javascript-globals-v1.4.1) - 2026-02-02
 
 ### Fixed
