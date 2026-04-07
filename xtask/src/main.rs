@@ -7,7 +7,7 @@ use serde::Serialize;
 #[derive(Serialize, Debug)]
 struct EnvVar<'a> {
     name: &'a str,
-    writeable: bool,
+    writable: bool,
 }
 
 #[derive(Serialize, Debug)]
@@ -182,7 +182,7 @@ fn main() {
                 .iter()
                 .map(|(key, value)| EnvVar {
                     name: key,
-                    writeable: *value,
+                    writable: *value,
                 })
                 .collect();
             v.sort_by_key(|e| e.name);
@@ -207,7 +207,7 @@ fn main() {
         let static_name = to_static_name(env.name);
         let mut inner_map = phf_codegen::Map::new();
         for var in &env.vars {
-            inner_map.entry(var.name, var.writeable.to_string());
+            inner_map.entry(var.name, var.writable.to_string());
         }
         individual_statics.push_str(&format!(
             "#[rustfmt::skip]\npub static {static_name}: phf::Map<&'static str, bool> = {};\n\n",
