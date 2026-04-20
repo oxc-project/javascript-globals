@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.1](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.5.0...javascript-globals-v1.5.1) - 2026-04-20
+
+### Other
+
+- Auto update globals from upstream ([#197](https://github.com/oxc-project/javascript-globals/pull/197))
+
 ## [1.5.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.4.1...javascript-globals-v1.5.0) - 2026-03-24
 
 ### Added
