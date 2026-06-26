@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
-- *(deps)* update rust crates to 0.14.0 ([#231](https://github.com/oxc-project/javascript-globals/pull/231))
+- _(deps)_ update rust crates to 0.14.0 ([#231](https://github.com/oxc-project/javascript-globals/pull/231))
 - Auto update globals from upstream ([#232](https://github.com/oxc-project/javascript-globals/pull/232))
-- *(deps)* update rust crate serde_json to v1.0.150 ([#221](https://github.com/oxc-project/javascript-globals/pull/221))
+- _(deps)_ update rust crate serde_json to v1.0.150 ([#221](https://github.com/oxc-project/javascript-globals/pull/221))
 - Auto update globals from upstream ([#208](https://github.com/oxc-project/javascript-globals/pull/208))
 - Auto update globals from upstream ([#197](https://github.com/oxc-project/javascript-globals/pull/197))
 
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- *(ci)* update globals package before running xtask ([#158](https://github.com/oxc-project/javascript-globals/pull/158))
+- _(ci)_ update globals package before running xtask ([#158](https://github.com/oxc-project/javascript-globals/pull/158))
 
 ## [1.4.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.4...javascript-globals-v1.4.0) - 2026-01-14
 
@@ -43,12 +43,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
-- *(xtask)* use globals from node_modules instead of HTTP ([#144](https://github.com/oxc-project/javascript-globals/pull/144))
+- _(xtask)_ use globals from node_modules instead of HTTP ([#144](https://github.com/oxc-project/javascript-globals/pull/144))
 - Auto update globals from upstream ([#136](https://github.com/oxc-project/javascript-globals/pull/136))
 - Auto update globals from upstream ([#132](https://github.com/oxc-project/javascript-globals/pull/132))
-- *(deps)* lock file maintenance ([#117](https://github.com/oxc-project/javascript-globals/pull/117))
-- *(deps)* update rust crate ureq to v3.1.4 ([#115](https://github.com/oxc-project/javascript-globals/pull/115))
-- *(deps)* lock file maintenance ([#114](https://github.com/oxc-project/javascript-globals/pull/114))
+- _(deps)_ lock file maintenance ([#117](https://github.com/oxc-project/javascript-globals/pull/117))
+- _(deps)_ update rust crate ureq to v3.1.4 ([#115](https://github.com/oxc-project/javascript-globals/pull/115))
+- _(deps)_ lock file maintenance ([#114](https://github.com/oxc-project/javascript-globals/pull/114))
 - Auto update globals from upstream ([#110](https://github.com/oxc-project/javascript-globals/pull/110))
 
 ## [1.3.4](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.3...javascript-globals-v1.3.4) - 2025-10-29
@@ -63,9 +63,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Auto update globals from upstream ([#79](https://github.com/oxc-project/javascript-globals/pull/79))
 - Add auto-update CI workflow for JavaScript globals ([#75](https://github.com/oxc-project/javascript-globals/pull/75))
-- *(deps)* lock file maintenance rust crates ([#72](https://github.com/oxc-project/javascript-globals/pull/72))
-- *(deps)* lock file maintenance ([#68](https://github.com/oxc-project/javascript-globals/pull/68))
-- *(deps)* lock file maintenance rust crates ([#63](https://github.com/oxc-project/javascript-globals/pull/63))
+- _(deps)_ lock file maintenance rust crates ([#72](https://github.com/oxc-project/javascript-globals/pull/72))
+- _(deps)_ lock file maintenance ([#68](https://github.com/oxc-project/javascript-globals/pull/68))
+- _(deps)_ lock file maintenance rust crates ([#63](https://github.com/oxc-project/javascript-globals/pull/63))
 
 ## [1.3.2](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.3.1...javascript-globals-v1.3.2) - 2025-07-27
 
