@@ -7,7 +7,6 @@ Rust fork of https://npmx.dev/package/globals
 ## Available Environments
 
 <!-- GENERATED-ENV-LIST:START - Do not remove or modify this section -->
-
 - `builtin`
 - `es6`
 - `es2015`
@@ -51,5 +50,4 @@ Rust fork of https://npmx.dev/package/globals
 - `qunit`
 - `vitest`
 - `vue`
-
 <!-- GENERATED-ENV-LIST:END -->
