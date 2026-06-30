@@ -2,5 +2,5 @@
   "devDependencies": {
     "globals": "^17.7.0"
   },
-  "packageManager": "pnpm@11.4.0"
+  "packageManager": "pnpm@11.9.0"
 }
