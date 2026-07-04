@@ -178,13 +178,8 @@ fn main() {
     .map(|(name, vars)| Env {
         name,
         vars: {
-            let mut v: Vec<_> = vars
-                .iter()
-                .map(|(key, value)| EnvVar {
-                    name: key,
-                    writable: *value,
-                })
-                .collect();
+            let mut v: Vec<_> =
+                vars.iter().map(|(key, value)| EnvVar { name: key, writable: *value }).collect();
             v.sort_by_key(|e| e.name);
             v
         },
@@ -252,9 +247,7 @@ impl Index<&str> for Globals {{
     type Output = phf::Map<&'static str, bool>;
 
     fn index(&self, key: &str) -> &Self::Output {{
-        self.0
-            .get(key)
-            .unwrap_or_else(|| panic!("unknown environment: {{key}}"))
+        self.0.get(key).unwrap_or_else(|| panic!("unknown environment: {{key}}"))
     }}
 }}
 
@@ -279,17 +272,10 @@ fn update_readme(env_names: &[&str]) {
     let start_marker = "<!-- GENERATED-ENV-LIST:START - Do not remove or modify this section -->";
     let end_marker = "<!-- GENERATED-ENV-LIST:END -->";
 
-    let start = readme
-        .find(start_marker)
-        .expect("Could not find start marker in README.md");
-    let end = readme
-        .find(end_marker)
-        .expect("Could not find end marker in README.md");
+    let start = readme.find(start_marker).expect("Could not find start marker in README.md");
+    let end = readme.find(end_marker).expect("Could not find end marker in README.md");
 
-    let env_list: String = env_names
-        .iter()
-        .map(|name| format!("- `{name}`\n"))
-        .collect();
+    let env_list: String = env_names.iter().map(|name| format!("- `{name}`\n")).collect();
 
     // Surround the list with blank lines so the output matches `dprint fmt`'s
     // markdown formatting; otherwise xtask and dprint fight over README.md.

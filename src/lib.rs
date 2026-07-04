@@ -37,9 +37,7 @@ impl Index<&str> for Globals {
     type Output = phf::Map<&'static str, bool>;
 
     fn index(&self, key: &str) -> &Self::Output {
-        self.0
-            .get(key)
-            .unwrap_or_else(|| panic!("unknown environment: {key}"))
+        self.0.get(key).unwrap_or_else(|| panic!("unknown environment: {key}"))
     }
 }
 
