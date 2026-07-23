@@ -11,9 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Other
 
-- *(deps)* update rust crate serde to v1.0.229 ([#256](https://github.com/oxc-project/javascript-globals/pull/256))
+- _(deps)_ update rust crate serde to v1.0.229 ([#256](https://github.com/oxc-project/javascript-globals/pull/256))
 - update sponsor section
-- *(deps)* update rust crate rustc-hash to v2.1.3 ([#247](https://github.com/oxc-project/javascript-globals/pull/247))
+- _(deps)_ update rust crate rustc-hash to v2.1.3 ([#247](https://github.com/oxc-project/javascript-globals/pull/247))
 - standardize rustfmt config
 - normalize README sponsor section
 - add crates environment to release workflow
