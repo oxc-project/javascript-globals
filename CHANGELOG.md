@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.2](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.5.1...javascript-globals-v1.5.2) - 2026-08-13
+
+### Other
+
+- Auto update globals from upstream ([#268](https://github.com/oxc-project/javascript-globals/pull/268))
+- Auto update globals from upstream ([#265](https://github.com/oxc-project/javascript-globals/pull/265))
+- Auto update globals from upstream ([#261](https://github.com/oxc-project/javascript-globals/pull/261))
+- _(deps)_ update rust crate serde_json to v1.0.151 ([#259](https://github.com/oxc-project/javascript-globals/pull/259))
+- _(deps)_ update rust crate serde to v1.0.229 ([#256](https://github.com/oxc-project/javascript-globals/pull/256))
+- update sponsor section
+- _(deps)_ update rust crate rustc-hash to v2.1.3 ([#247](https://github.com/oxc-project/javascript-globals/pull/247))
+- standardize rustfmt config
+- normalize README sponsor section
+- add crates environment to release workflow
+
 ## [1.5.1](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.5.0...javascript-globals-v1.5.1) - 2026-06-24
 
 ### Other
