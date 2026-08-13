@@ -9,15 +9,15 @@ importers:
   .:
     devDependencies:
       globals:
-        specifier: ^17.9.0
-        version: 17.9.0
+        specifier: ^17.10.0
+        version: 17.10.0
 
 packages:
 
-  globals@17.9.0:
-    resolution: {integrity: sha512-m/MvAW61QVU5VDNF1Vj8axt016h8w7L5TU1e9zlab7XIttAT2YAlCwl75K1fOqvMM9apmD7lbCIRhpfkhmxhCg==}
+  globals@17.10.0:
+    resolution: {integrity: sha512-V0kztuWST2k8A/VbxAY8+L+7+Rgo3fyA24IHRLrZp7HOzJjV0gHSaZUjK9lpP/IrBSNite2tZ1prhRkinRu1CA==}
     engines: {node: '>=18'}
 
 snapshots:
 
-  globals@17.9.0: {}
+  globals@17.10.0: {}
