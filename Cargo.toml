@@ -34,3 +34,9 @@ doctest = false
 
 [dependencies]
 phf = "0.14.0"
+
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
