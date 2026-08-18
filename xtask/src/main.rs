@@ -145,6 +145,7 @@ fn main() {
         // Platforms
         ("audioworklet", &globals["audioWorklet"]),
         ("browser", &globals["browser"]),
+        ("bun", &globals["bunBuiltin"]),
         ("node", &globals["node"]),
         ("shared-node-browser", &globals["shared-node-browser"]),
         ("worker", &globals["worker"]),

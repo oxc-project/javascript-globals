@@ -24,6 +24,7 @@ Rust fork of https://npmx.dev/package/globals
 - `es2026`
 - `audioworklet`
 - `browser`
+- `bun`
 - `node`
 - `shared-node-browser`
 - `worker`
