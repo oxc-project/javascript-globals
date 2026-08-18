@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.5.2...javascript-globals-v1.6.0) - 2026-08-18
+
+### Added
+
+- add Bun globals ([#275](https://github.com/oxc-project/javascript-globals/pull/275))
+
+### Other
+
+- reduce Rust dev debug info ([#271](https://github.com/oxc-project/javascript-globals/pull/271))
+
 ## [1.5.2](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.5.1...javascript-globals-v1.5.2) - 2026-08-13
 
 ### Other
