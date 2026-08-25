@@ -205,7 +205,7 @@ fn main() {
 
     // Use the PHF output position as the stable numeric ID for each name. The runtime map stores
     // offsets into one string, rather than one fat `&str` and one value per occurrence.
-    let hash_state = phf_generator::generate_hash(&global_names);
+    let hash_state = phf_generator::ptrhash::generate_hash(&global_names);
     let mut global_ids = FxHashMap::default();
     let mut global_names_blob = String::new();
     let mut global_name_offsets = Vec::with_capacity(global_names.len() + 1);
@@ -222,7 +222,8 @@ fn main() {
     global_name_offsets
         .push(u16::try_from(global_names_blob.len()).expect("global names exceed 64 KiB"));
 
-    let global_name_disps = format_disps(&hash_state.disps);
+    let global_name_pilots = format_byte_string(&hash_state.pilots);
+    let global_name_remap = format_values(&hash_state.remap, ToString::to_string);
     let global_name_offsets = format_values(&global_name_offsets, |value| format!("0x{value:04x}"));
     let global_name_refs = format_values(&global_name_refs, |value| format!("{value:?}"));
     let global_name_bytes = global_names.len().div_ceil(8);
@@ -276,19 +277,26 @@ use core::{{
 const GLOBAL_NAME_COUNT: usize = {global_name_count};
 
 struct GlobalNames {{
-    key: u64,
-    disps: &'static [(u32, u32)],
+    seed: u64,
+    pilots: &'static [u8],
+    remap: &'static [u32],
     names: &'static [u8],
     offsets: &'static [u16],
 }}
 
 impl GlobalNames {{
     fn get(&self, name: &str) -> Option<u16> {{
-        if self.disps.is_empty() {{
+        if self.pilots.is_empty() {{
             return None;
         }}
-        let hashes = phf_shared::hash(name, &self.key);
-        let index = phf_shared::get_index(&hashes, self.disps, GLOBAL_NAME_COUNT) as usize;
+        let hash = phf_shared::ptrhash::hash(name, &self.seed);
+        let index = phf_shared::ptrhash::get_index(
+            self.seed,
+            hash,
+            self.pilots,
+            self.remap,
+            GLOBAL_NAME_COUNT,
+        ) as usize;
         (self.name(index) == name.as_bytes()).then_some(index as u16)
     }}
 
@@ -304,8 +312,9 @@ impl GlobalNames {{
 }}
 
 static GLOBAL_NAMES: GlobalNames = GlobalNames {{
-    key: {global_name_key},
-    disps: &[{global_name_disps}
+    seed: {global_name_seed},
+    pilots: {global_name_pilots},
+    remap: &[{global_name_remap}
     ],
     names: {global_names_blob:?}.as_bytes(),
     offsets: &[{global_name_offsets}
@@ -576,7 +585,7 @@ impl Index<&str> for Globals {{
 /// All available environments.
 pub static GLOBALS: Globals = Globals;
 "#,
-        global_name_key = hash_state.key,
+        global_name_seed = hash_state.seed,
         global_name_count = global_names.len(),
         global_name_bytes = global_name_bytes,
         environment_count = envs_preset.len(),
@@ -589,10 +598,6 @@ pub static GLOBALS: Globals = Globals;
 
 fn to_static_name(name: &str) -> String {
     format!("GLOBALS_{}", name.to_uppercase().replace('-', "_"))
-}
-
-fn format_disps(disps: &[(u32, u32)]) -> String {
-    format_values(disps, |(d1, d2)| format!("({d1}, {d2})"))
 }
 
 fn format_byte_string(bytes: &[u8]) -> String {
