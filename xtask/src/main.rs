@@ -267,7 +267,11 @@ fn main() {
     let out = format!(
         r#"{header}
 
-use core::{{fmt, iter::FusedIterator, ops::{{Index, Range}}}};
+use core::{{
+    fmt,
+    iter::FusedIterator,
+    ops::{{Index, Range}},
+}};
 
 const GLOBAL_NAME_COUNT: usize = {global_name_count};
 
@@ -323,11 +327,7 @@ pub struct GlobalSet {{
 }}
 
 impl GlobalSet {{
-    const fn new(
-        members: &'static [u8; {global_name_bytes}],
-        writable: &'static [u16],
-        len: u16,
-    ) -> Self {{
+    const fn new(members: &'static [u8; {global_name_bytes}], writable: &'static [u16], len: u16) -> Self {{
         Self {{ members, writable, len }}
     }}
 
@@ -540,9 +540,7 @@ pub struct Globals;
 
 impl Globals {{
     /// Returns an iterator over the entries of the globals map.
-    pub fn entries(
-        &self,
-    ) -> impl Iterator<Item = (&'static str, &'static GlobalSet)> + '_ {{
+    pub fn entries(&self) -> impl Iterator<Item = (&'static str, &'static GlobalSet)> + '_ {{
         ENVIRONMENTS.iter().copied()
     }}
 
