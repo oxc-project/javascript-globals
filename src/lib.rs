@@ -4,6 +4,8 @@
 //!
 //! Rust fork of <https://www.npmjs.com/package/globals>
 
+use core::ops::Range;
+
 mod generated;
 pub use generated::{GLOBALS, GLOBALS_BUILTIN, GLOBALS_ES2026};
 
@@ -57,8 +59,12 @@ impl GlobalSet {
         self.members[id / 8] & (1 << (id % 8)) != 0
     }
 
-    fn is_writable(&self, id: u16) -> bool {
-        self.writable.binary_search(&id).is_ok()
+    fn writable_value(&self, id: u16) -> &'static bool {
+        if self.writable.binary_search(&id).is_ok() { &true } else { &false }
+    }
+
+    fn entry(&self, id: u16) -> (&'static &'static str, &'static bool) {
+        (&generated::GLOBAL_NAME_REFS[usize::from(id)], self.writable_value(id))
     }
 
     /// Returns whether the map contains `key`.
@@ -67,18 +73,49 @@ impl GlobalSet {
     }
 
     /// Returns the writability of `key`.
-    pub fn get(&self, key: &str) -> Option<bool> {
+    pub fn get(&self, key: &str) -> Option<&'static bool> {
         let id = self.global_id(key)?;
-        Some(self.is_writable(id))
+        Some(self.writable_value(id))
     }
 
-    /// Returns an iterator over the entries of the globals map.
-    pub fn entries(&self) -> impl Iterator<Item = (&'static str, bool)> + '_ {
-        (0..generated::GLOBAL_NAME_COUNT).filter_map(|id| {
-            let id = id as u16;
-            self.contains_id(id)
-                .then(|| (generated::GLOBAL_NAMES.name(usize::from(id)), self.is_writable(id)))
-        })
+    /// Returns an iterator over names.
+    pub fn keys(&self) -> impl Iterator<Item = &'static &'static str> + '_ {
+        self.into_iter().map(|entry| entry.0)
+    }
+}
+
+impl<'a> IntoIterator for &'a GlobalSet {
+    type Item = (&'static &'static str, &'static bool);
+    type IntoIter = GlobalEntries<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        GlobalEntries { set: self, ids: 0..generated::GLOBAL_NAME_COUNT }
+    }
+}
+
+/// Iterator over a [`GlobalSet`]'s entries.
+pub struct GlobalEntries<'a> {
+    set: &'a GlobalSet,
+    ids: Range<usize>,
+}
+
+impl Iterator for GlobalEntries<'_> {
+    type Item = (&'static &'static str, &'static bool);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        while self.ids.start < self.ids.end {
+            let byte_index = self.ids.start / 8;
+            let byte = self.set.members[byte_index] & (u8::MAX << (self.ids.start % 8));
+            if byte != 0 {
+                let id = byte_index * 8 + byte.trailing_zeros() as usize;
+                if id < self.ids.end {
+                    self.ids.start = id + 1;
+                    return Some(self.set.entry(id as u16));
+                }
+            }
+            self.ids.start = ((byte_index + 1) * 8).min(self.ids.end);
+        }
+        None
     }
 }
 

@@ -313,6 +313,25 @@ const fn u32s<const START: usize, const LEN: usize>() -> [u32; LEN] {{
     values
 }}
 
+const fn global_name_refs(
+    names: &'static [u8],
+    offsets: &'static [u16],
+) -> [&'static str; {global_name_count}] {{
+    let mut refs = [""; {global_name_count}];
+    let mut index = 0;
+    while index < refs.len() {{
+        let start = offsets[index] as usize;
+        let end = offsets[index + 1] as usize;
+        // SAFETY: The generator concatenates valid UTF-8 strings and records their boundaries.
+        refs[index] = unsafe {{
+            let bytes = core::slice::from_raw_parts(names.as_ptr().add(start), end - start);
+            core::str::from_utf8_unchecked(bytes)
+        }};
+        index += 1;
+    }}
+    refs
+}}
+
 pub(super) const GLOBAL_NAME_COUNT: usize = {global_name_count};
 pub(super) const GLOBAL_NAME_BYTES: usize = {global_name_bytes};
 
@@ -323,6 +342,9 @@ pub(super) static GLOBAL_NAMES: GlobalNames = GlobalNames {{
     names: &bytes::<0x{global_names_start:04x}, {global_names_len}>(),
     offsets: &u16s::<0x{global_name_offsets_start:04x}, {global_name_offsets_len}>(),
 }};
+
+pub(super) static GLOBAL_NAME_REFS: [&str; {global_name_count}] =
+    global_name_refs(GLOBAL_NAMES.names, GLOBAL_NAMES.offsets);
 
 {individual_statics}pub(super) static ENVIRONMENTS: [(&str, &GlobalSet); {environment_count}] = [
 {environment_entries}];

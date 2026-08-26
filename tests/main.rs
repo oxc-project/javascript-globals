@@ -2,7 +2,7 @@ use javascript_globals::{GLOBALS, GLOBALS_BUILTIN, GLOBALS_ES2026};
 
 #[test]
 fn test_builtin_environment() {
-    assert_eq!(GLOBALS.get("builtin").and_then(|globals| globals.get("Date")), Some(false));
+    assert_eq!(GLOBALS.get("builtin").and_then(|globals| globals.get("Date")), Some(&false));
     assert!(GLOBALS_BUILTIN.contains_key("Date"));
     assert!(GLOBALS_ES2026.contains_key("Iterator"));
 }
@@ -15,8 +15,13 @@ fn test_all_environments_and_iterators() {
     for (environment_name, globals) in environments {
         assert!(GLOBALS.get(environment_name).is_some_and(|found| core::ptr::eq(found, globals)));
 
-        for (name, writable) in globals.entries() {
-            assert_eq!(globals.get(name), Some(writable));
+        let entries =
+            globals.into_iter().map(|(&name, &writable)| (name, writable)).collect::<Vec<_>>();
+        let keys = globals.keys().copied().collect::<Vec<_>>();
+        assert_eq!(keys, entries.iter().map(|(name, _)| *name).collect::<Vec<_>>());
+
+        for (name, writable) in entries {
+            assert_eq!(globals.get(name).copied(), Some(writable));
             assert!(globals.contains_key(name));
         }
     }
@@ -28,5 +33,5 @@ fn test_all_environments_and_iterators() {
 
 #[test]
 fn test_writable_value() {
-    assert_eq!(GLOBALS.get("phantomjs").unwrap().get("console"), Some(true));
+    assert_eq!(GLOBALS.get("phantomjs").unwrap().get("console"), Some(&true));
 }
