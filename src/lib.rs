@@ -96,7 +96,9 @@ static GLOBAL_NAMES: GlobalNames = GlobalNames {
 
 // Retains the previous iterator item types (`&&str`, `&bool`). This table is not referenced by
 // lookup-only users such as Oxlint, so the linker can discard it there.
-include!("generated/global_name_refs.rs");
+#[path = "generated/global_name_refs.rs"]
+mod global_name_refs;
+use global_name_refs::GLOBAL_NAME_REFS;
 
 /// A compact map of global names to their writability.
 #[derive(PartialEq, Eq)]

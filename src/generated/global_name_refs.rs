@@ -1,5 +1,5 @@
 #[rustfmt::skip]
-static GLOBAL_NAME_REFS: [&str; 1638] = [
+pub(super) static GLOBAL_NAME_REFS: [&str; 1638] = [
         "SVGAnimatedNumber",
         "NotRestoredReasons",
         "CSSStyleRule",
