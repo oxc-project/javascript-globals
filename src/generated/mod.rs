@@ -41,10 +41,7 @@ const fn u32s<const START: usize, const LEN: usize>() -> [u32; LEN] {
     values
 }
 
-const fn global_name_refs(
-    names: &'static [u8],
-    offsets: &'static [u16],
-) -> [&'static str; 1638] {
+const fn global_name_refs(names: &'static [u8], offsets: &'static [u16]) -> [&'static str; 1638] {
     let mut refs = [""; 1638];
     let mut index = 0;
     while index < refs.len() {
