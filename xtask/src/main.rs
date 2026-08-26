@@ -252,9 +252,8 @@ fn main() {
         } else {
             let members_start = append_bytes(&mut generated_data, &environment.0);
             let writable_start = append_u16s(&mut generated_data, &environment.1);
-            let len = env.vars.len();
             individual_statics.push_str(&format!(
-                "pub static {static_name}: GlobalSet =\n    GlobalSet::new(&bytes::<0x{members_start:04x}, {global_name_bytes}>(), &u16s::<0x{writable_start:04x}, {}>(), {len});\n\n",
+                "#[rustfmt::skip]\npub static {static_name}: GlobalSet = GlobalSet::new(&bytes::<0x{members_start:04x}, {global_name_bytes}>(), &u16s::<0x{writable_start:04x}, {}>());\n\n",
                 environment.1.len(),
             ));
             unique_environments.insert(environment, static_name.clone());
