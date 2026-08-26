@@ -33,7 +33,7 @@ test = false
 doctest = false
 
 [dependencies]
-phf = "0.14.0"
+phf_shared = { version = "0.14.0", features = ["ptrhash"] }
 
 [profile.dev]
 debug = "line-tables-only"

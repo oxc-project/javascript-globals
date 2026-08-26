@@ -18,7 +18,7 @@ checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 name = "javascript-globals"
 version = "1.6.0"
 dependencies = [
- "phf",
+ "phf_shared",
 ]
 
 [[package]]
@@ -32,26 +32,6 @@ name = "memchr"
 version = "2.7.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f52b00d39961fc5b2736ea853c9cc86238e165017a493d1d5c8eac6bdc4cc273"
-
-[[package]]
-name = "phf"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "010378780309880b08997fae13be7834dba947d36393bd372f2b1556deb2a2f6"
-dependencies = [
- "phf_shared",
- "serde",
-]
-
-[[package]]
-name = "phf_codegen"
-version = "0.14.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41b585a510fb76fdebead6897982ef2a03a21d8e6cbcca904999742a4afc6ffe"
-dependencies = [
- "phf_generator",
- "phf_shared",
-]
 
 [[package]]
 name = "phf_generator"
@@ -167,7 +147,7 @@ name = "xtask"
 version = "0.0.0"
 dependencies = [
  "lazy_static",
- "phf_codegen",
+ "phf_generator",
  "rustc-hash",
  "serde",
  "serde_json",

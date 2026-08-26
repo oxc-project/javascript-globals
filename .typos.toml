@@ -1,4 +1,4 @@
 [files]
 extend-exclude = [
-  "src/lib.rs",
+  "src/generated/",
 ]
