@@ -3,12 +3,31 @@
 //! Global identifiers from different JavaScript environments
 //!
 //! Rust fork of <https://www.npmjs.com/package/globals>
+//!
+//! ## Representation
+//!
+//! Every unique global name has one shared `u16` ID. A [`GlobalSet`] stores one membership bit
+//! per ID and a sorted list of the writable IDs, so environments do not repeat names or hash-table
+//! metadata. Identical environments share the same static set.
+//!
+//! The generated `data.bin` contains the PHF tables, concatenated UTF-8 names, name offsets,
+//! membership bitsets, and writable-ID lists. The `generated` module converts those byte ranges
+//! into typed static arrays during const evaluation; no data is parsed or allocated at runtime.
+//!
+//! A name lookup uses the shared PHF to find a candidate ID, verifies the candidate string, checks
+//! the environment's membership bit, then binary-searches its writable IDs. Iteration scans set
+//! bits and uses a const-generated reference table into the shared name blob.
+//!
+//! Environment lookup uses a generated string match. The separate environment array is referenced
+//! only by iteration, allowing linkers to discard it when callers use only [`Globals::get`].
 
 pub use generated::{GLOBALS, GLOBALS_BUILTIN, GLOBALS_ES2026};
 
 /// A compact map of global names to their writability.
 pub struct GlobalSet {
+    /// One bit for every ID in the shared global-name index.
     members: &'static [u8; generated::GLOBAL_NAME_BYTES],
+    /// Sorted IDs for the writable members of this environment; other members are read-only.
     writable: &'static [u16],
 }
 
@@ -51,6 +70,7 @@ impl Iterator for GlobalEntries<'_> {
     fn next(&mut self) -> Option<Self::Item> {
         while self.ids.start < self.ids.end {
             let byte_index = self.ids.start / 8;
+            // Ignore IDs already visited in this byte, then jump directly to its next set bit.
             let byte = self.set.members[byte_index] & (u8::MAX << (self.ids.start % 8));
             if byte != 0 {
                 let id = byte_index * 8 + byte.trailing_zeros() as usize;
@@ -82,15 +102,19 @@ impl Globals {
 
 mod generated;
 
+/// Shared perfect-hash index and compact name storage.
 struct GlobalNames {
     seed: u64,
     pilots: &'static [u8],
     remap: &'static [u32],
+    /// Every name concatenated in PHF slot order.
     names: &'static [u8],
+    /// One byte offset per name plus a final sentinel.
     offsets: &'static [u16],
 }
 
 impl GlobalNames {
+    /// Returns the ID only when the PHF candidate contains the exact input string.
     fn get(&self, name: &str) -> Option<u16> {
         let hash = phf_shared::ptrhash::hash(name, &self.seed);
         let index = phf_shared::ptrhash::get_index(
@@ -116,6 +140,7 @@ impl GlobalNames {
 }
 
 impl GlobalSet {
+    /// Resolves `key` in the shared name index, then checks this environment's membership bit.
     fn global_id(&self, key: &str) -> Option<u16> {
         let id = generated::GLOBAL_NAMES.get(key)?;
         self.contains_id(id).then_some(id)
