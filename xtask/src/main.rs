@@ -1,4 +1,4 @@
-use std::{collections::BTreeSet, fmt::Write, fs};
+use std::{collections::BTreeSet, fs, path::Path};
 
 use lazy_static::lazy_static;
 use rustc_hash::FxHashMap;
@@ -189,6 +189,15 @@ fn main() {
 
     let env_names: Vec<&str> = envs_preset.iter().map(|env| env.name).collect();
 
+    let generated_dir = Path::new("src/generated");
+    fs::create_dir_all(generated_dir).unwrap();
+    for entry in fs::read_dir(generated_dir).unwrap() {
+        let path = entry.unwrap().path();
+        if path.extension().is_some_and(|extension| extension == "bin") {
+            fs::remove_file(path).unwrap();
+        }
+    }
+
     let header = "//! # JavaScript Globals
 //!
 //! Global identifiers from different JavaScript environments
@@ -222,9 +231,11 @@ fn main() {
     global_name_offsets
         .push(u16::try_from(global_names_blob.len()).expect("global names exceed 64 KiB"));
 
-    let global_name_pilots = format_byte_string(&hash_state.pilots);
-    let global_name_remap = format_values(&hash_state.remap, ToString::to_string);
-    let global_name_offsets = format_values(&global_name_offsets, |value| format!("0x{value:04x}"));
+    let mut generated_data = Vec::new();
+    let global_name_pilots_start = append_bytes(&mut generated_data, &hash_state.pilots);
+    let global_name_remap_start = append_u32s(&mut generated_data, &hash_state.remap);
+    let global_names_start = append_bytes(&mut generated_data, global_names_blob.as_bytes());
+    let global_name_offsets_start = append_u16s(&mut generated_data, &global_name_offsets);
     let global_name_refs = format_values(&global_name_refs, |value| format!("{value:?}"));
     let global_name_bytes = global_names.len().div_ceil(8);
 
@@ -251,11 +262,12 @@ fn main() {
         if let Some(canonical_name) = unique_environments.get(&environment) {
             individual_statics.push_str(&format!("pub use {canonical_name} as {static_name};\n\n"));
         } else {
-            let members = format_byte_string(&environment.0);
-            let writable = format_values(&environment.1, |value| format!("0x{value:04x}"));
+            let members_start = append_bytes(&mut generated_data, &environment.0);
+            let writable_start = append_u16s(&mut generated_data, &environment.1);
             let len = env.vars.len();
             individual_statics.push_str(&format!(
-                "#[rustfmt::skip]\npub static {static_name}: GlobalSet = GlobalSet::new(\n    {members},\n    &[{writable}\n    ],\n    {len},\n);\n\n"
+                "pub static {static_name}: GlobalSet = GlobalSet::new(\n    &generated_bytes::<0x{members_start:04x}, {global_name_bytes}>(),\n    &generated_u16s::<0x{writable_start:04x}, {}>(),\n    {len},\n);\n\n",
+                environment.1.len(),
             ));
             unique_environments.insert(environment, static_name.clone());
         }
@@ -265,6 +277,21 @@ fn main() {
         environment_entries.push_str(&format!("    ({:?}, &{static_name}),\n", env.name));
     }
 
+    fs::write(generated_dir.join("data.bin"), &generated_data).unwrap();
+    fs::write(
+        generated_dir.join("global_name_refs.rs"),
+        format!(
+            "#[rustfmt::skip]\nstatic GLOBAL_NAME_REFS: [&str; {}] = [{global_name_refs}\n];\n",
+            global_names.len(),
+        ),
+    )
+    .unwrap();
+    let generated_data_len = generated_data.len();
+    let global_name_pilots_len = hash_state.pilots.len();
+    let global_name_remap_len = hash_state.remap.len();
+    let global_names_len = global_names_blob.len();
+    let global_name_offsets_len = global_name_offsets.len();
+
     let out = format!(
         r#"{header}
 
@@ -273,6 +300,46 @@ use core::{{
     iter::FusedIterator,
     ops::{{Index, Range}},
 }};
+
+const GENERATED_DATA: &[u8; {generated_data_len}] = include_bytes!("generated/data.bin");
+
+const fn generated_bytes<const START: usize, const LEN: usize>() -> [u8; LEN] {{
+    let mut values = [0; LEN];
+    let mut index = 0;
+    while index < LEN {{
+        values[index] = GENERATED_DATA[START + index];
+        index += 1;
+    }}
+    values
+}}
+
+const fn generated_u16s<const START: usize, const LEN: usize>() -> [u16; LEN] {{
+    let mut values = [0; LEN];
+    let mut index = 0;
+    while index < LEN {{
+        let offset = START + index * 2;
+        values[index] =
+            u16::from_le_bytes([GENERATED_DATA[offset], GENERATED_DATA[offset + 1]]);
+        index += 1;
+    }}
+    values
+}}
+
+const fn generated_u32s<const START: usize, const LEN: usize>() -> [u32; LEN] {{
+    let mut values = [0; LEN];
+    let mut index = 0;
+    while index < LEN {{
+        let offset = START + index * 4;
+        values[index] = u32::from_le_bytes([
+            GENERATED_DATA[offset],
+            GENERATED_DATA[offset + 1],
+            GENERATED_DATA[offset + 2],
+            GENERATED_DATA[offset + 3],
+        ]);
+        index += 1;
+    }}
+    values
+}}
 
 const GLOBAL_NAME_COUNT: usize = {global_name_count};
 
@@ -313,19 +380,15 @@ impl GlobalNames {{
 
 static GLOBAL_NAMES: GlobalNames = GlobalNames {{
     seed: {global_name_seed},
-    pilots: {global_name_pilots},
-    remap: &[{global_name_remap}
-    ],
-    names: {global_names_blob:?}.as_bytes(),
-    offsets: &[{global_name_offsets}
-    ],
+    pilots: &generated_bytes::<0x{global_name_pilots_start:04x}, {global_name_pilots_len}>(),
+    remap: &generated_u32s::<0x{global_name_remap_start:04x}, {global_name_remap_len}>(),
+    names: &generated_bytes::<0x{global_names_start:04x}, {global_names_len}>(),
+    offsets: &generated_u16s::<0x{global_name_offsets_start:04x}, {global_name_offsets_len}>(),
 }};
 
 // Retains the previous iterator item types (`&&str`, `&bool`). This table is not referenced by
 // lookup-only users such as Oxlint, so the linker can discard it there.
-#[rustfmt::skip]
-static GLOBAL_NAME_REFS: [&str; {global_name_count}] = [{global_name_refs}
-];
+include!("generated/global_name_refs.rs");
 
 /// A compact map of global names to their writability.
 #[derive(PartialEq, Eq)]
@@ -600,11 +663,22 @@ fn to_static_name(name: &str) -> String {
     format!("GLOBALS_{}", name.to_uppercase().replace('-', "_"))
 }
 
-fn format_byte_string(bytes: &[u8]) -> String {
-    bytes.iter().fold(String::from("b\""), |mut output, byte| {
-        write!(output, "\\x{byte:02x}").unwrap();
-        output
-    }) + "\""
+fn append_bytes(data: &mut Vec<u8>, values: &[u8]) -> usize {
+    let start = data.len();
+    data.extend_from_slice(values);
+    start
+}
+
+fn append_u16s(data: &mut Vec<u8>, values: &[u16]) -> usize {
+    let start = data.len();
+    data.extend(values.iter().flat_map(|value| value.to_le_bytes()));
+    start
+}
+
+fn append_u32s(data: &mut Vec<u8>, values: &[u32]) -> usize {
+    let start = data.len();
+    data.extend(values.iter().flat_map(|value| value.to_le_bytes()));
+    start
 }
 
 fn format_values<T>(values: &[T], format: impl Fn(&T) -> String) -> String {
