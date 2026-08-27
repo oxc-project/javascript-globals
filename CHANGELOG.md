@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.6.0...javascript-globals-v2.0.0) - 2026-08-27
+
+### Other
+
+- [**breaking**] compact generated global tables ([#280](https://github.com/oxc-project/javascript-globals/pull/280))
+
 ## [1.6.0](https://github.com/oxc-project/javascript-globals/compare/javascript-globals-v1.5.2...javascript-globals-v1.6.0) - 2026-08-18
 
 ### Added
