@@ -421,8 +421,7 @@ fn update_readme(env_names: &[&str]) {
 
     let env_list: String = env_names.iter().map(|name| format!("- `{name}`\n")).collect();
 
-    // Surround the list with blank lines so the output matches `dprint fmt`'s
-    // markdown formatting; otherwise xtask and dprint fight over README.md.
+    // Surround the generated list with blank lines for readable Markdown.
     let new_readme = format!(
         "{}{start_marker}\n\n{env_list}\n{end_marker}{}",
         &readme[..start],

@@ -9,7 +9,7 @@ _default:
 alias r := ready
 
 init:
-  cargo binstall watchexec-cli cargo-insta typos-cli cargo-shear@1.13.1 dprint -y
+  cargo binstall watchexec-cli cargo-insta typos-cli cargo-shear@1.13.1 -y
 
 ready:
   git diff --exit-code --quiet
@@ -27,7 +27,6 @@ watch *args='':
 fmt:
   cargo shear --fix --check-test-targets
   cargo fmt --all
-  dprint fmt
 
 check:
   cargo check --workspace --all-features --all-targets --locked
