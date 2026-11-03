@@ -11,7 +11,7 @@
 
 use super::{GlobalNames, GlobalSet, Globals};
 
-const DATA: &[u8; 34028] = include_bytes!("data.bin");
+const DATA: &[u8; 34212] = include_bytes!("data.bin");
 
 const fn bytes<const START: usize, const LEN: usize>() -> [u8; LEN] {
     let mut values = [0; LEN];
@@ -52,8 +52,8 @@ const fn u32s<const START: usize, const LEN: usize>() -> [u32; LEN] {
 
 // Preserve the map-compatible iterator item type without emitting one Rust string literal per
 // name. Every reference points into the single name blob owned by `GLOBAL_NAMES`.
-const fn global_name_refs(names: &'static [u8], offsets: &'static [u16]) -> [&'static str; 1650] {
-    let mut refs = [""; 1650];
+const fn global_name_refs(names: &'static [u8], offsets: &'static [u16]) -> [&'static str; 1657] {
+    let mut refs = [""; 1657];
     let mut index = 0;
     while index < refs.len() {
         let start = offsets[index] as usize;
@@ -68,46 +68,46 @@ const fn global_name_refs(names: &'static [u8], offsets: &'static [u16]) -> [&'s
     refs
 }
 
-pub(super) const GLOBAL_NAME_COUNT: usize = 1650;
-pub(super) const GLOBAL_NAME_BYTES: usize = 207;
+pub(super) const GLOBAL_NAME_COUNT: usize = 1657;
+pub(super) const GLOBAL_NAME_BYTES: usize = 208;
 
 // A ptrhash output slot is the global's shared numeric ID. `GlobalNames::get` verifies the string
 // at the candidate slot because a perfect hash only distinguishes keys from its generated set.
 pub(super) static GLOBAL_NAMES: GlobalNames = GlobalNames {
     seed: 16287231350648472473,
-    pilots: &bytes::<0x0000, 553>(),
-    remap: &u32s::<0x0229, 17>(),
-    names: &bytes::<0x026d, 22317>(),
-    offsets: &u16s::<0x599a, 1651>(),
+    pilots: &bytes::<0x0000, 556>(),
+    remap: &u32s::<0x022c, 17>(),
+    names: &bytes::<0x0270, 22446>(),
+    offsets: &u16s::<0x5a1e, 1658>(),
 };
 
-pub(super) static GLOBAL_NAME_REFS: [&str; 1650] =
+pub(super) static GLOBAL_NAME_REFS: [&str; 1657] =
     global_name_refs(GLOBAL_NAMES.names, GLOBAL_NAMES.offsets);
 
 // Each set references its member bitset and sorted writable-ID slice inside `data.bin`. Equal sets
 // are emitted as aliases by the generator.
 #[rustfmt::skip]
-pub static GLOBALS_BUILTIN: GlobalSet = GlobalSet { members: &bytes::<0x6680, 207>(), writable: &u16s::<0x674f, 0>() };
+pub static GLOBALS_BUILTIN: GlobalSet = GlobalSet { members: &bytes::<0x6712, 208>(), writable: &u16s::<0x67e2, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_ES6: GlobalSet = GlobalSet { members: &bytes::<0x674f, 207>(), writable: &u16s::<0x681e, 0>() };
+pub static GLOBALS_ES6: GlobalSet = GlobalSet { members: &bytes::<0x67e2, 208>(), writable: &u16s::<0x68b2, 0>() };
 
 pub use GLOBALS_ES6 as GLOBALS_ES2015;
 
 pub use GLOBALS_ES6 as GLOBALS_ES2016;
 
 #[rustfmt::skip]
-pub static GLOBALS_ES2017: GlobalSet = GlobalSet { members: &bytes::<0x681e, 207>(), writable: &u16s::<0x68ed, 0>() };
+pub static GLOBALS_ES2017: GlobalSet = GlobalSet { members: &bytes::<0x68b2, 208>(), writable: &u16s::<0x6982, 0>() };
 
 pub use GLOBALS_ES2017 as GLOBALS_ES2018;
 
 pub use GLOBALS_ES2017 as GLOBALS_ES2019;
 
 #[rustfmt::skip]
-pub static GLOBALS_ES2020: GlobalSet = GlobalSet { members: &bytes::<0x68ed, 207>(), writable: &u16s::<0x69bc, 0>() };
+pub static GLOBALS_ES2020: GlobalSet = GlobalSet { members: &bytes::<0x6982, 208>(), writable: &u16s::<0x6a52, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_ES2021: GlobalSet = GlobalSet { members: &bytes::<0x69bc, 207>(), writable: &u16s::<0x6a8b, 0>() };
+pub static GLOBALS_ES2021: GlobalSet = GlobalSet { members: &bytes::<0x6a52, 208>(), writable: &u16s::<0x6b22, 0>() };
 
 pub use GLOBALS_ES2021 as GLOBALS_ES2022;
 
@@ -116,99 +116,99 @@ pub use GLOBALS_ES2021 as GLOBALS_ES2023;
 pub use GLOBALS_ES2021 as GLOBALS_ES2024;
 
 #[rustfmt::skip]
-pub static GLOBALS_ES2025: GlobalSet = GlobalSet { members: &bytes::<0x6a8b, 207>(), writable: &u16s::<0x6b5a, 0>() };
+pub static GLOBALS_ES2025: GlobalSet = GlobalSet { members: &bytes::<0x6b22, 208>(), writable: &u16s::<0x6bf2, 0>() };
 
 pub use GLOBALS_ES2025 as GLOBALS_ES2026;
 
 #[rustfmt::skip]
-pub static GLOBALS_AUDIOWORKLET: GlobalSet = GlobalSet { members: &bytes::<0x6b5a, 207>(), writable: &u16s::<0x6c29, 0>() };
+pub static GLOBALS_AUDIOWORKLET: GlobalSet = GlobalSet { members: &bytes::<0x6bf2, 208>(), writable: &u16s::<0x6cc2, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_BROWSER: GlobalSet = GlobalSet { members: &bytes::<0x6c29, 207>(), writable: &u16s::<0x6cf8, 125>() };
+pub static GLOBALS_BROWSER: GlobalSet = GlobalSet { members: &bytes::<0x6cc2, 208>(), writable: &u16s::<0x6d92, 126>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_BUN: GlobalSet = GlobalSet { members: &bytes::<0x6df2, 207>(), writable: &u16s::<0x6ec1, 2>() };
+pub static GLOBALS_BUN: GlobalSet = GlobalSet { members: &bytes::<0x6e8e, 208>(), writable: &u16s::<0x6f5e, 2>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_NODE: GlobalSet = GlobalSet { members: &bytes::<0x6ec5, 207>(), writable: &u16s::<0x6f94, 1>() };
+pub static GLOBALS_NODE: GlobalSet = GlobalSet { members: &bytes::<0x6f62, 208>(), writable: &u16s::<0x7032, 1>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_SHARED_NODE_BROWSER: GlobalSet = GlobalSet { members: &bytes::<0x6f96, 207>(), writable: &u16s::<0x7065, 0>() };
+pub static GLOBALS_SHARED_NODE_BROWSER: GlobalSet = GlobalSet { members: &bytes::<0x7034, 208>(), writable: &u16s::<0x7104, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_WORKER: GlobalSet = GlobalSet { members: &bytes::<0x7065, 207>(), writable: &u16s::<0x7134, 9>() };
+pub static GLOBALS_WORKER: GlobalSet = GlobalSet { members: &bytes::<0x7104, 208>(), writable: &u16s::<0x71d4, 9>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_SERVICEWORKER: GlobalSet = GlobalSet { members: &bytes::<0x7146, 207>(), writable: &u16s::<0x7215, 25>() };
+pub static GLOBALS_SERVICEWORKER: GlobalSet = GlobalSet { members: &bytes::<0x71e6, 208>(), writable: &u16s::<0x72b6, 25>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_AMD: GlobalSet = GlobalSet { members: &bytes::<0x7247, 207>(), writable: &u16s::<0x7316, 0>() };
+pub static GLOBALS_AMD: GlobalSet = GlobalSet { members: &bytes::<0x72e8, 208>(), writable: &u16s::<0x73b8, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_APPLESCRIPT: GlobalSet = GlobalSet { members: &bytes::<0x7316, 207>(), writable: &u16s::<0x73e5, 0>() };
+pub static GLOBALS_APPLESCRIPT: GlobalSet = GlobalSet { members: &bytes::<0x73b8, 208>(), writable: &u16s::<0x7488, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_ASTRO: GlobalSet = GlobalSet { members: &bytes::<0x73e5, 207>(), writable: &u16s::<0x74b4, 0>() };
+pub static GLOBALS_ASTRO: GlobalSet = GlobalSet { members: &bytes::<0x7488, 208>(), writable: &u16s::<0x7558, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_ATOMTEST: GlobalSet = GlobalSet { members: &bytes::<0x74b4, 207>(), writable: &u16s::<0x7583, 0>() };
+pub static GLOBALS_ATOMTEST: GlobalSet = GlobalSet { members: &bytes::<0x7558, 208>(), writable: &u16s::<0x7628, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_COMMONJS: GlobalSet = GlobalSet { members: &bytes::<0x7583, 207>(), writable: &u16s::<0x7652, 1>() };
+pub static GLOBALS_COMMONJS: GlobalSet = GlobalSet { members: &bytes::<0x7628, 208>(), writable: &u16s::<0x76f8, 1>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_EMBERTEST: GlobalSet = GlobalSet { members: &bytes::<0x7654, 207>(), writable: &u16s::<0x7723, 0>() };
+pub static GLOBALS_EMBERTEST: GlobalSet = GlobalSet { members: &bytes::<0x76fa, 208>(), writable: &u16s::<0x77ca, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_GREASEMONKEY: GlobalSet = GlobalSet { members: &bytes::<0x7723, 207>(), writable: &u16s::<0x77f2, 0>() };
+pub static GLOBALS_GREASEMONKEY: GlobalSet = GlobalSet { members: &bytes::<0x77ca, 208>(), writable: &u16s::<0x789a, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_JASMINE: GlobalSet = GlobalSet { members: &bytes::<0x77f2, 207>(), writable: &u16s::<0x78c1, 0>() };
+pub static GLOBALS_JASMINE: GlobalSet = GlobalSet { members: &bytes::<0x789a, 208>(), writable: &u16s::<0x796a, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_JEST: GlobalSet = GlobalSet { members: &bytes::<0x78c1, 207>(), writable: &u16s::<0x7990, 0>() };
+pub static GLOBALS_JEST: GlobalSet = GlobalSet { members: &bytes::<0x796a, 208>(), writable: &u16s::<0x7a3a, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_JQUERY: GlobalSet = GlobalSet { members: &bytes::<0x7990, 207>(), writable: &u16s::<0x7a5f, 0>() };
+pub static GLOBALS_JQUERY: GlobalSet = GlobalSet { members: &bytes::<0x7a3a, 208>(), writable: &u16s::<0x7b0a, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_METEOR: GlobalSet = GlobalSet { members: &bytes::<0x7a5f, 207>(), writable: &u16s::<0x7b2e, 0>() };
+pub static GLOBALS_METEOR: GlobalSet = GlobalSet { members: &bytes::<0x7b0a, 208>(), writable: &u16s::<0x7bda, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_MOCHA: GlobalSet = GlobalSet { members: &bytes::<0x7b2e, 207>(), writable: &u16s::<0x7bfd, 0>() };
+pub static GLOBALS_MOCHA: GlobalSet = GlobalSet { members: &bytes::<0x7bda, 208>(), writable: &u16s::<0x7caa, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_MONGO: GlobalSet = GlobalSet { members: &bytes::<0x7bfd, 207>(), writable: &u16s::<0x7ccc, 0>() };
+pub static GLOBALS_MONGO: GlobalSet = GlobalSet { members: &bytes::<0x7caa, 208>(), writable: &u16s::<0x7d7a, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_NASHORN: GlobalSet = GlobalSet { members: &bytes::<0x7ccc, 207>(), writable: &u16s::<0x7d9b, 0>() };
+pub static GLOBALS_NASHORN: GlobalSet = GlobalSet { members: &bytes::<0x7d7a, 208>(), writable: &u16s::<0x7e4a, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_PROTRACTOR: GlobalSet = GlobalSet { members: &bytes::<0x7d9b, 207>(), writable: &u16s::<0x7e6a, 0>() };
+pub static GLOBALS_PROTRACTOR: GlobalSet = GlobalSet { members: &bytes::<0x7e4a, 208>(), writable: &u16s::<0x7f1a, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_PROTOTYPEJS: GlobalSet = GlobalSet { members: &bytes::<0x7e6a, 207>(), writable: &u16s::<0x7f39, 0>() };
+pub static GLOBALS_PROTOTYPEJS: GlobalSet = GlobalSet { members: &bytes::<0x7f1a, 208>(), writable: &u16s::<0x7fea, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_PHANTOMJS: GlobalSet = GlobalSet { members: &bytes::<0x7f39, 207>(), writable: &u16s::<0x8008, 5>() };
+pub static GLOBALS_PHANTOMJS: GlobalSet = GlobalSet { members: &bytes::<0x7fea, 208>(), writable: &u16s::<0x80ba, 5>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_SHELLJS: GlobalSet = GlobalSet { members: &bytes::<0x8012, 207>(), writable: &u16s::<0x80e1, 0>() };
+pub static GLOBALS_SHELLJS: GlobalSet = GlobalSet { members: &bytes::<0x80c4, 208>(), writable: &u16s::<0x8194, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_SVELTE: GlobalSet = GlobalSet { members: &bytes::<0x80e1, 207>(), writable: &u16s::<0x81b0, 0>() };
+pub static GLOBALS_SVELTE: GlobalSet = GlobalSet { members: &bytes::<0x8194, 208>(), writable: &u16s::<0x8264, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_WEBEXTENSIONS: GlobalSet = GlobalSet { members: &bytes::<0x81b0, 207>(), writable: &u16s::<0x827f, 0>() };
+pub static GLOBALS_WEBEXTENSIONS: GlobalSet = GlobalSet { members: &bytes::<0x8264, 208>(), writable: &u16s::<0x8334, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_QUNIT: GlobalSet = GlobalSet { members: &bytes::<0x827f, 207>(), writable: &u16s::<0x834e, 0>() };
+pub static GLOBALS_QUNIT: GlobalSet = GlobalSet { members: &bytes::<0x8334, 208>(), writable: &u16s::<0x8404, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_VITEST: GlobalSet = GlobalSet { members: &bytes::<0x834e, 207>(), writable: &u16s::<0x841d, 0>() };
+pub static GLOBALS_VITEST: GlobalSet = GlobalSet { members: &bytes::<0x8404, 208>(), writable: &u16s::<0x84d4, 0>() };
 
 #[rustfmt::skip]
-pub static GLOBALS_VUE: GlobalSet = GlobalSet { members: &bytes::<0x841d, 207>(), writable: &u16s::<0x84ec, 0>() };
+pub static GLOBALS_VUE: GlobalSet = GlobalSet { members: &bytes::<0x84d4, 208>(), writable: &u16s::<0x85a4, 0>() };
 
 pub(super) static ENVIRONMENTS: [(&str, &GlobalSet); 44] = [
     ("builtin", &GLOBALS_BUILTIN),
